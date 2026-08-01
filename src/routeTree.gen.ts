@@ -10,33 +10,141 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AttendanceRouteImport } from './routes/attendance'
+import { Route as ChildrenRouteImport } from './routes/children'
+import { Route as ClassroomsRouteImport } from './routes/classrooms'
+import { Route as InventoryRouteImport } from './routes/inventory'
+import { Route as PaymentsRouteImport } from './routes/payments'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as StaffRouteImport } from './routes/staff'
+import { Route as StatisticsRouteImport } from './routes/statistics'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AttendanceRoute = AttendanceRouteImport.update({
+  id: '/attendance',
+  path: '/attendance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChildrenRoute = ChildrenRouteImport.update({
+  id: '/children',
+  path: '/children',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassroomsRoute = ClassroomsRouteImport.update({
+  id: '/classrooms',
+  path: '/classrooms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InventoryRoute = InventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentsRoute = PaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StaffRoute = StaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatisticsRoute = StatisticsRouteImport.update({
+  id: '/statistics',
+  path: '/statistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/attendance': typeof AttendanceRoute
+  '/children': typeof ChildrenRoute
+  '/classrooms': typeof ClassroomsRoute
+  '/inventory': typeof InventoryRoute
+  '/payments': typeof PaymentsRoute
+  '/reports': typeof ReportsRoute
+  '/staff': typeof StaffRoute
+  '/statistics': typeof StatisticsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/attendance': typeof AttendanceRoute
+  '/children': typeof ChildrenRoute
+  '/classrooms': typeof ClassroomsRoute
+  '/inventory': typeof InventoryRoute
+  '/payments': typeof PaymentsRoute
+  '/reports': typeof ReportsRoute
+  '/staff': typeof StaffRoute
+  '/statistics': typeof StatisticsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/attendance': typeof AttendanceRoute
+  '/children': typeof ChildrenRoute
+  '/classrooms': typeof ClassroomsRoute
+  '/inventory': typeof InventoryRoute
+  '/payments': typeof PaymentsRoute
+  '/reports': typeof ReportsRoute
+  '/staff': typeof StaffRoute
+  '/statistics': typeof StatisticsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/attendance'
+    | '/children'
+    | '/classrooms'
+    | '/inventory'
+    | '/payments'
+    | '/reports'
+    | '/staff'
+    | '/statistics'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/attendance'
+    | '/children'
+    | '/classrooms'
+    | '/inventory'
+    | '/payments'
+    | '/reports'
+    | '/staff'
+    | '/statistics'
+  id:
+    | '__root__'
+    | '/'
+    | '/attendance'
+    | '/children'
+    | '/classrooms'
+    | '/inventory'
+    | '/payments'
+    | '/reports'
+    | '/staff'
+    | '/statistics'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AttendanceRoute: typeof AttendanceRoute
+  ChildrenRoute: typeof ChildrenRoute
+  ClassroomsRoute: typeof ClassroomsRoute
+  InventoryRoute: typeof InventoryRoute
+  PaymentsRoute: typeof PaymentsRoute
+  ReportsRoute: typeof ReportsRoute
+  StaffRoute: typeof StaffRoute
+  StatisticsRoute: typeof StatisticsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +156,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/attendance': {
+      id: '/attendance'
+      path: '/attendance'
+      fullPath: '/attendance'
+      preLoaderRoute: typeof AttendanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/children': {
+      id: '/children'
+      path: '/children'
+      fullPath: '/children'
+      preLoaderRoute: typeof ChildrenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classrooms': {
+      id: '/classrooms'
+      path: '/classrooms'
+      fullPath: '/classrooms'
+      preLoaderRoute: typeof ClassroomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inventory': {
+      id: '/inventory'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payments': {
+      id: '/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof PaymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staff': {
+      id: '/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof StaffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statistics': {
+      id: '/statistics'
+      path: '/statistics'
+      fullPath: '/statistics'
+      preLoaderRoute: typeof StatisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AttendanceRoute: AttendanceRoute,
+  ChildrenRoute: ChildrenRoute,
+  ClassroomsRoute: ClassroomsRoute,
+  InventoryRoute: InventoryRoute,
+  PaymentsRoute: PaymentsRoute,
+  ReportsRoute: ReportsRoute,
+  StaffRoute: StaffRoute,
+  StatisticsRoute: StatisticsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
