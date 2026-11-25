@@ -42,10 +42,10 @@ export function AppShell({
   const present = state.attendance.filter((a) => a.date === day && a.status === "present").length;
 
   return (
-    <div className="flex min-h-screen">
-      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar px-4 py-6 lg:flex">
+    <div className="flex min-h-screen gap-4 lg:p-4">
+      <aside className="sticky top-4 hidden h-[calc(100vh-2rem)] w-60 shrink-0 flex-col rounded-3xl bg-brand-gradient px-4 py-6 text-sidebar-foreground shadow-soft lg:flex">
         <Link to="/" className="mb-8 flex items-center gap-2.5 px-2">
-          <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
+          <span className="grid size-9 place-items-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground">
             <School className="size-4.5" />
           </span>
           <span className="font-display text-lg font-semibold tracking-tight">Little Oak</span>
@@ -57,7 +57,7 @@ export function AppShell({
               key={to}
               to={to}
               activeOptions={{ exact }}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-sidebar-accent data-[status=active]:text-sidebar-accent-foreground data-[status=active]:ring-1 data-[status=active]:ring-sidebar-border"
             >
               <Icon className="size-4" />
               {label}
@@ -65,11 +65,11 @@ export function AppShell({
           ))}
         </nav>
 
-        <div className="mt-auto rounded-xl bg-secondary p-4">
-          <p className="stat-label">On site now</p>
+        <div className="mt-auto rounded-2xl bg-sidebar-accent p-4 ring-1 ring-sidebar-border">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-sidebar-foreground/70">On site now</p>
           <p className="font-display text-2xl font-semibold">
             {present}
-            <span className="text-base text-muted-foreground">/{state.children.length}</span>
+            <span className="text-base text-sidebar-foreground/60">/{state.children.length}</span>
           </p>
         </div>
       </aside>
@@ -88,22 +88,22 @@ export function AppShell({
           ))}
         </nav>
 
-        <header className="flex flex-wrap items-end justify-between gap-4 px-6 pb-6 pt-8 lg:px-10">
+        <header className="mx-4 mb-6 mt-4 flex flex-wrap items-end justify-between gap-4 rounded-3xl bg-brand-gradient px-6 py-6 text-primary-foreground shadow-soft lg:mx-0 lg:mt-0 lg:px-8">
           <div>
-            <p className="stat-label mb-1">
+            <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground/70">
               {new Date().toLocaleDateString("en-US", {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
               })}
             </p>
-            <h1 className="font-display text-3xl font-semibold">{title}</h1>
-            {subtitle ? <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p> : null}
+            <h1 className="font-display text-3xl font-bold">{title}</h1>
+            {subtitle ? <p className="mt-1 text-sm text-primary-foreground/80">{subtitle}</p> : null}
           </div>
-          {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
+          {actions ? <div className="flex flex-wrap gap-2 [&_button]:shadow-none [&_.bg-background]:text-foreground">{actions}</div> : null}
         </header>
 
-        <main className="px-6 pb-16 lg:px-10">{children}</main>
+        <main className="px-4 pb-16 lg:px-0">{children}</main>
       </div>
     </div>
   );
