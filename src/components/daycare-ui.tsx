@@ -49,14 +49,23 @@ export function StatCard({
   value,
   hint,
   accent,
+  tone = "primary",
 }: {
   label: string;
   value: string;
   hint?: string;
   accent?: boolean;
+  tone?: "primary" | "sun" | "blush" | "accent";
 }) {
+  const bar = {
+    primary: "bg-primary",
+    sun: "bg-sun",
+    blush: "bg-blush",
+    accent: "bg-accent",
+  }[tone];
   return (
-    <div className="surface p-5">
+    <div className="surface relative overflow-hidden p-5">
+      <span className={cn("absolute inset-x-0 top-0 h-1.5", bar)} />
       <p className="stat-label">{label}</p>
       <p
         className={cn(
@@ -71,9 +80,18 @@ export function StatCard({
   );
 }
 
+const avatarTones = [
+  "bg-sun/35 text-sun-foreground ring-sun",
+  "bg-blush/20 text-blush ring-blush/60",
+  "bg-success/15 text-success ring-success/50",
+  "bg-info/15 text-info ring-info/50",
+  "bg-accent/15 text-accent ring-accent/50",
+];
+
 export function Avatar({ text }: { text: string }) {
+  const tone = avatarTones[(text.charCodeAt(0) + (text.charCodeAt(1) || 0)) % avatarTones.length];
   return (
-    <span className="grid size-10 shrink-0 place-items-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground ring-1 ring-border">
+    <span className={cn("grid size-10 shrink-0 place-items-center rounded-full text-xs font-bold ring-2", tone)}>
       {text}
     </span>
   );

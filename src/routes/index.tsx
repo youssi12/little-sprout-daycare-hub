@@ -5,6 +5,9 @@ import { Avatar, StatCard, StatusPill, Tag } from "@/components/daycare-ui";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ageLabel, initials, money, useDaycare } from "@/lib/daycare-store";
+import heroArt from "@/assets/hero.png.asset.json";
+import paintImg from "@/assets/paint.jpg.asset.json";
+import blocksImg from "@/assets/blocks.jpg.asset.json";
 import { currentMonth, todayISO } from "@/lib/daycare-seed";
 
 export const Route = createFileRoute("/")({
@@ -67,20 +70,47 @@ function Dashboard() {
         </>
       }
     >
+      <section className="surface relative mb-6 overflow-hidden">
+        <span className="rainbow-bar absolute inset-x-0 top-0 h-1.5" />
+        <div className="grid items-center gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
+          <div className="p-6 md:p-8">
+            <span className="inline-flex rounded-full bg-sun/40 px-3 py-1 text-xs font-bold text-sun-foreground">
+              ☀ Sunny day ahead
+            </span>
+            <h2 className="mt-3 font-display text-2xl font-bold">
+              {state.children.length - present.length} little ones still to arrive
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {alerts.length} care alerts on site · {lowStock.length} items to reorder
+            </p>
+          </div>
+          <img
+            src={heroArt.url}
+            alt="Toddlers playing with blocks and crayons"
+            fetchPriority="high"
+            width={1774}
+            height={887}
+            className="h-44 w-full object-cover md:h-52"
+          />
+        </div>
+      </section>
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
+          tone="primary"
           label="Checked in"
           value={`${present.length}/${state.children.length}`}
           hint={`${state.classrooms.length} classrooms open`}
         />
-        <StatCard label="Daily reports logged" value={`${loggedToday}/${present.length}`} />
+        <StatCard tone="sun" label="Daily reports logged" value={`${loggedToday}/${present.length}`} />
         <StatCard
           label="Unpaid this month"
           value={money(unpaid.reduce((s, p) => s + p.amount, 0))}
           hint={`${unpaid.length} families`}
+          tone="accent"
           accent
         />
-        <StatCard label="Low stock items" value={String(lowStock.length)} hint="Needs reorder" />
+        <StatCard tone="blush" label="Low stock items" value={String(lowStock.length)} hint="Needs reorder" />
       </div>
 
       <div className="mt-8 grid gap-8 xl:grid-cols-3">
@@ -146,6 +176,34 @@ function Dashboard() {
         </section>
 
         <aside className="space-y-6">
+          <section className="surface overflow-hidden">
+            <div className="flex items-center justify-between p-5 pb-3">
+              <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+                Today's moments
+              </h3>
+              <span className="rounded-full bg-blush/15 px-2.5 py-0.5 text-[11px] font-bold text-blush">
+                2 new
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 px-5 pb-5">
+              {[
+                { src: paintImg.url, cap: "Sprouts · finger painting" },
+                { src: blocksImg.url, cap: "Seedlings · block tower" },
+              ].map((m) => (
+                <figure key={m.cap}>
+                  <img
+                    src={m.src}
+                    alt={m.cap}
+                    loading="lazy"
+                    width={600}
+                    height={600}
+                    className="aspect-square w-full rounded-xl object-cover"
+                  />
+                  <figcaption className="mt-1.5 text-xs text-muted-foreground">{m.cap}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
           <div className="surface p-5">
             <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
               <AlertTriangle className="size-4 text-destructive" /> Care alerts
