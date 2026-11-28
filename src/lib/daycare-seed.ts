@@ -1,113 +1,31 @@
-import type { AttendanceStatus, DaycareState } from "./daycare-types";
-
+import type { DaycareState, Settings } from './daycare-types';
 export const todayISO = () => new Date().toISOString().slice(0, 10);
-export const currentMonth = () => new Date().toISOString().slice(0, 7);
-
-const classrooms = [
-  { id: "c1", name: "Seedlings", ageRange: "0–2 yrs", capacity: 10 },
-  { id: "c2", name: "Sprouts", ageRange: "2–3 yrs", capacity: 14 },
-  { id: "c3", name: "Little Oaks", ageRange: "3–5 yrs", capacity: 16 },
-];
-
-const kids = [
-  ["Leo", "Miller", "2022-06-14", "c2", ["Peanuts"], "Carries EpiPen in green bag.", "Maria Miller", "555-0142", "maria.miller@mail.com", "Tom Miller", "555-0188", ["Maria Miller", "Tom Miller", "Nan Miller"], 450],
-  ["Maya", "Chen", "2023-02-02", "c1", ["Dairy"], "Lactose intolerant — soy milk provided by parents.", "Wei Chen", "555-0173", "wei.chen@mail.com", "Lian Chen", "555-0199", ["Wei Chen", "Lian Chen"], 495],
-  ["Oliver", "Bennett", "2021-09-30", "c3", [], "", "Sarah Bennett", "555-0110", "s.bennett@mail.com", "Paul Bennett", "555-0111", ["Sarah Bennett", "Paul Bennett"], 420],
-  ["Amara", "Okafor", "2021-04-18", "c3", ["Eggs"], "Mild eczema — cream after outdoor play.", "Ngozi Okafor", "555-0125", "ngozi@mail.com", "Emeka Okafor", "555-0126", ["Ngozi Okafor", "Emeka Okafor"], 420],
-  ["Felix", "Aris", "2022-11-05", "c2", [], "Wears glasses, spare pair in cubby.", "Elena Aris", "555-0134", "elena.aris@mail.com", "Dimi Aris", "555-0135", ["Elena Aris", "Dimi Aris"], 450],
-  ["Mila", "Vance", "2023-05-21", "c1", [], "", "Kate Vance", "555-0150", "kate.vance@mail.com", "Joe Vance", "555-0151", ["Kate Vance", "Joe Vance"], 495],
-  ["Noah", "Silva", "2021-12-12", "c3", ["Shellfish"], "", "Ana Silva", "555-0160", "ana.silva@mail.com", "Rui Silva", "555-0161", ["Ana Silva", "Rui Silva"], 420],
-  ["Sophie", "Tan", "2022-08-09", "c2", [], "Asthma — inhaler at 10:30am daily.", "Grace Tan", "555-0170", "grace.tan@mail.com", "Ben Tan", "555-0171", ["Grace Tan", "Ben Tan"], 450],
-  ["Ivy", "Novak", "2023-01-16", "c1", [], "", "Petra Novak", "555-0180", "petra@mail.com", "Jan Novak", "555-0181", ["Petra Novak", "Jan Novak"], 495],
-  ["Jonah", "Reyes", "2021-07-07", "c3", [], "", "Cruz Reyes", "555-0190", "cruz.reyes@mail.com", "Lia Reyes", "555-0191", ["Cruz Reyes", "Lia Reyes"], 420],
-] as const;
-
-function plusDays(days: number) {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+export const currentMonth = () => todayISO().slice(0, 7);
+export const defaultSettings: Settings = { name: 'Little Oak', phone: '', email: '', language: 'en' };
+export function emptyState(settings: Settings = defaultSettings): DaycareState {
+  return { settings: { ...settings }, classrooms: [
+    { id: 'c1', name: 'Bébés', ageRange: '0–2', capacity: 10 },
+    { id: 'c2', name: 'Petits', ageRange: '2–3', capacity: 14 },
+    { id: 'c3', name: 'Grands', ageRange: '3–5', capacity: 16 },
+  ], children: [], staff: [], attendance: [], payments: [], reports: [], inventory: [] };
 }
-
-export function seedState(): DaycareState {
-  const day = todayISO();
-  const month = currentMonth();
-
-  const children = kids.map((k, i) => ({
-    id: `k${i + 1}`,
-    firstName: k[0],
-    lastName: k[1],
-    birthDate: k[2],
-    classroomId: k[3],
-    allergies: [...k[4]],
-    medicalNotes: k[5],
-    parentName: k[6],
-    parentPhone: k[7],
-    parentEmail: k[8],
-    emergencyName: k[9],
-    emergencyPhone: k[10],
-    authorizedPickups: [...k[11]],
-    monthlyFee: k[12],
-    vaccinations: [
-      { name: "DTaP booster", dueDate: plusDays((i % 5) * 9 - 4) },
-      { name: "MMR", dueDate: plusDays(120 + i * 3) },
-    ],
-  }));
-
-  const presentIdx = [0, 1, 2, 3, 5, 7, 8];
-  const checkedOut = [9];
-
-  const attendance = children.map((c, i) => {
-    const status = presentIdx.includes(i)
-      ? "present"
-      : checkedOut.includes(i)
-        ? "checked-out"
-        : i === 4
-          ? "absent"
-          : "expected";
-    return {
-      id: `a-${c.id}-${day}`,
-      childId: c.id,
-      date: day,
-      status: status as AttendanceStatus,
-      checkInAt: status === "present" || status === "checked-out" ? `0${7 + (i % 2)}:${(15 + i * 4) % 60}`.replace(/:(\d)$/, ":0$1") : undefined,
-      checkOutAt: status === "checked-out" ? "15:40" : undefined,
-      droppedOffBy: status === "present" || status === "checked-out" ? c.parentName : undefined,
-      pickedUpBy: status === "checked-out" ? c.emergencyName : undefined,
-    };
+export function seedState(settings: Settings = defaultSettings): DaycareState {
+  const state = emptyState(settings), today = todayISO(), month = currentMonth();
+  const names = [ ['Yacine','Benali','Nadia Benali','Karim Benali'], ['Lina','Boudiaf','Amel Boudiaf','Samir Boudiaf'], ['آدم','بوقرة','سارة بوقرة','مراد بوقرة'], ['Inès','Mansouri','Leïla Mansouri','Rachid Mansouri'], ['Amir','Haddad','Souad Haddad','Nabil Haddad'], ['مريم','بن سعيد','فاطمة بن سعيد','علي بن سعيد'], ['Aya','Cherif','Yasmine Cherif','Sofiane Cherif'], ['Ilyes','Bouzid','Khadidja Bouzid','Youcef Bouzid'], ['نور','بلقاسم','أمينة بلقاسم','محمد بلقاسم'], ['Rayan','Aït Ahmed','Djamila Aït Ahmed','Farid Aït Ahmed'] ];
+  const ages = [30, 14, 7, 44, 36, 22, 57, 40, 11, 61];
+  const fees = [15000, 22000, 25000, 14000, 15000, 20000, 12000, 16000, 23000, 13000];
+  state.children = names.map((n, i) => {
+    const age = ages[i] ?? 30, d = new Date(`${today}T12:00:00Z`); d.setUTCMonth(d.getUTCMonth() - age);
+    const due = new Date(`${today}T12:00:00Z`); due.setUTCDate(due.getUTCDate() + i * 7 - 3);
+    return { id: `k${i+1}`, firstName: n[0] ?? '', lastName: n[1] ?? '', birthDate: d.toISOString().slice(0,10), classroomId: age < 24 ? 'c1' : age < 36 ? 'c2' : 'c3',
+      parentName: n[2] ?? '', emergencyName: n[3] ?? '', parentPhone: `0${5+i%3} 55 00 10 ${String(i+10)}`, emergencyPhone: `0${7-i%3} 66 00 20 ${String(i+10)}`, parentEmail: `famille.${['benali','boudiaf','bouguerra','mansouri','haddad','bensaid','cherif','bouzid','belkacem','aitahmed'][i]}@example.com`,
+      allergies: i === 0 ? ['Arachides'] : i === 3 ? ['Œufs'] : i === 5 ? ['Lait'] : [], medicalNotes: i === 0 ? 'Stylo auto-injecteur dans le sac. Contacter les parents en cas de réaction.' : i === 5 ? 'Lait sans lactose fourni par la famille.' : i === 7 ? 'Asthme : inhalateur dans le casier, selon ordonnance.' : '', authorizedPickups: [n[2] ?? '', n[3] ?? ''], monthlyFee: fees[i] ?? 15000,
+      vaccinations: [{ name: age < 12 ? 'BCG / Hépatite B — vérification carnet' : age < 24 ? 'ROR — vérification carnet' : 'DTC-Polio — rappel selon carnet', dueDate: due.toISOString().slice(0,10) }] };
   });
-
-  const payments = children.map((c, i) => ({
-    id: `p-${c.id}-${month}`,
-    childId: c.id,
-    month,
-    amount: c.monthlyFee,
-    paid: i % 4 !== 1,
-    paidAt: i % 4 !== 1 ? `${month}-03` : undefined,
-    method: i % 4 !== 1 ? (i % 2 ? "Bank transfer" : "Card") : undefined,
-  }));
-
-  const staff = [
-    { id: "s1", name: "Sarah Jenkins", role: "Director", phone: "555-0201", classroomId: "c3", shift: "07:00 – 16:00", days: ["Mon", "Tue", "Wed", "Thu", "Fri"] },
-    { id: "s2", name: "Clara Nwosu", role: "Lead Teacher", phone: "555-0202", classroomId: "c1", shift: "07:30 – 15:30", days: ["Mon", "Tue", "Wed", "Thu"] },
-    { id: "s3", name: "Diego Marín", role: "Teacher", phone: "555-0203", classroomId: "c2", shift: "08:00 – 17:00", days: ["Mon", "Wed", "Thu", "Fri"] },
-    { id: "s4", name: "Hanna Berg", role: "Teacher", phone: "555-0204", classroomId: "c3", shift: "09:00 – 18:00", days: ["Tue", "Wed", "Thu", "Fri"] },
-    { id: "s5", name: "Rosa Kim", role: "Assistant", phone: "555-0205", classroomId: "c1", shift: "10:00 – 18:00", days: ["Mon", "Tue", "Fri"] },
-  ];
-
-  const reports = [
-    { id: "r1", childId: "k1", date: day, meals: "Turkey wrap, grapes", mealAmount: "most" as const, napMinutes: 55, mood: "happy" as const, activities: "Sandpit, story circle", notes: "Shared toys nicely." },
-    { id: "r2", childId: "k6", date: day, meals: "Oat porridge, pear", mealAmount: "all" as const, napMinutes: 80, mood: "calm" as const, activities: "Music time", notes: "" },
-  ];
-
-  const inventory = [
-    { id: "i1", name: "Diapers size 3", category: "Supplies" as const, quantity: 8, threshold: 20, unit: "packs" },
-    { id: "i2", name: "Wet wipes", category: "Supplies" as const, quantity: 34, threshold: 15, unit: "packs" },
-    { id: "i3", name: "Oat milk", category: "Food" as const, quantity: 6, threshold: 10, unit: "litres" },
-    { id: "i4", name: "Apples", category: "Food" as const, quantity: 42, threshold: 20, unit: "pieces" },
-    { id: "i5", name: "Building blocks", category: "Toys" as const, quantity: 12, threshold: 6, unit: "sets" },
-    { id: "i6", name: "Craft paper", category: "Supplies" as const, quantity: 3, threshold: 8, unit: "reams" },
-    { id: "i7", name: "Puzzles", category: "Toys" as const, quantity: 18, threshold: 8, unit: "boxes" },
-  ];
-
-  return { children, classrooms, staff, attendance, payments, reports, inventory };
+  state.attendance = state.children.map((c,i) => ({ id:`a-${c.id}-${today}`, childId:c.id,date:today,status:i<6?'present':i===6?'checked-out':i===7?'absent':'expected', ...(i<7?{checkInAt:`08:${String(10+i*5).padStart(2,'0')}`,droppedOffBy:c.parentName}:{}), ...(i===6?{checkOutAt:'14:30',pickedUpBy:c.emergencyName}:{}) }));
+  state.payments = state.children.map((c,i) => ({id:`p-${c.id}-${month}`,childId:c.id,month,amount:c.monthlyFee,installments:i%3===2?[]:[{id:`ip-${i}`,amount:i%3===0?c.monthlyFee:Math.round(c.monthlyFee/2),date:`${month}-05`,method:i%2===0?'cash':'transfer',note:''}]}));
+  state.staff = [ ['Nadia Belkacem','director','c3'],['سميرة بن عمر','lead-teacher','c1'],['Amine Rahmani','teacher','c2'],['خديجة بوزيد','assistant','c1'],['Fatiha Meziane','cook','c3'] ].map((n,i)=>({ id:`s${i+1}`,name:n[0]??'',role:n[1]??'teacher',classroomId:n[2]??'',phone:`06 77 00 30 ${i+10}`,shift:i===4?'07:00 – 15:00':'08:00 – 16:00',days:['sun','mon','tue','wed','thu'] }));
+  state.reports = [ {id:'r1',childId:'k1',date:today,meals:'Couscous aux légumes, compote de pommes',mealAmount:'most',napMinutes:60,mood:'happy',activities:'Peinture, jeux de construction',notes:'A partagé ses jouets avec ses camarades.'}, {id:'r2',childId:'k2',date:today,meals:'Purée de légumes, yaourt',mealAmount:'all',napMinutes:90,mood:'calm',activities:'Comptines, éveil sensoriel',notes:''} ];
+  state.inventory = [['Couches taille 3','supplies',8,20,'paquets'],['Lingettes','supplies',34,15,'paquets'],['Lait infantile','food',6,10,'boîtes'],['Pommes','food',42,20,'pièces'],['Cubes de construction','toys',12,6,'lots'],['Papier à dessin','supplies',3,8,'ramettes'],['Puzzles','toys',18,8,'boîtes']].map((n,i)=>({id:`i${i+1}`,name:String(n[0]),category:n[1] as 'supplies'|'food'|'toys',quantity:Number(n[2]),threshold:Number(n[3]),unit:String(n[4])}));
+  return state;
 }
